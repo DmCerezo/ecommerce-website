@@ -15,8 +15,7 @@ The page is focus in creating a wonderful and relaxing experience before and aft
 **Server:** MariaDB, Xampp
 
 ## Visit the website
-[Somnia]([https://www.github.com/DmCerezo](https://dmcerezo.github.io/ecommerce-website/index.html))
-
+[SOMNIA-WEBPAGE](https://www.github.com/DmCerezo](https://dmcerezo.github.io/ecommerce-website/index.html)
 
 ## Authors
 
