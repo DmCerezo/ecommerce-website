@@ -95,6 +95,11 @@ a {
     .custom-navbar .custom-navbar-cta li {
       margin-left: 0px;
       margin-right: 0px; }
+    @media (max-width: 568px) {
+          .custom-navbar .custom-navbar-cta li {
+      margin-left: 0px;
+      margin-right: 30px; }
+    }
 
 
 .hero {
