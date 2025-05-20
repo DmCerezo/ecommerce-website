@@ -4,6 +4,7 @@
 * Author URI: https://untree.co/
 * License: https://creativecommons.org/licenses/by/3.0/
 */
+
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 body {
   overflow-x: hidden;
@@ -30,6 +31,8 @@ a {
   a.more {
     font-weight: 600; }
 
+
+    
 .custom-navbar {
   background: #623434 !important;
   padding-top: 20px;
@@ -92,8 +95,7 @@ a {
     .custom-navbar .custom-navbar-cta li {
       margin-left: 0px;
       margin-right: 0px; }
-      .custom-navbar .custom-navbar-cta li:first-child {
-        margin-right: 20px; }
+
 
 .hero {
   background: #623434;
@@ -153,10 +155,14 @@ a {
       background-size: contain;
       background-repeat: no-repeat;
       right: -100px;
-      top: -0px; }
-      @media (min-width: 1200px) {
+      top: -0px; 
+      }
+      @media (max-width: 600px) {
         .hero .hero-img-wrap:after {
-          top: -40px; } }
+          top: -40px; 
+          right: 15%;
+        } }
+
 
 .btn {
   font-weight: 600;
@@ -709,3 +715,5 @@ textarea {
     height: 50px;
     border-radius: 50%;
     background: rgba(59, 93, 80, 0.2); }
+
+
