@@ -23,6 +23,12 @@
   <?php include 'cards/nav.php'; ?>
   <!-- Fin Header/Navigation -->
 
+  <script>
+  const usuarioLogueado = <?php echo isset($_SESSION['usuario']) ? 'true' : 'false'; ?>;
+</script>
+
+
+
   <?php
 include 'db_connect.php';
 $usuario_id = 1;
@@ -40,6 +46,16 @@ $subtotal = 0;
 foreach ($carrito as $item) {
     $subtotal += $item['total'];
 }
+$usuario = null;
+
+if (isset($_SESSION['usuario'])) {
+    $nombreUsuario = $_SESSION['usuario'];
+
+    $stmt = $conn->prepare("SELECT direccion_entrega, codigo_postal, direccion_facturacion, telefono FROM usuarios WHERE nombre = ?");
+    $stmt->execute([$nombreUsuario]);
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 ?>
 
 
@@ -64,173 +80,38 @@ foreach ($carrito as $item) {
       <div class="row mb-5">
         <div class="col-md-12">
           <div class="border p-4 rounded" role="alert">
-            ¿Cliente frecuente? <a href="#">Haz clic aquí</a> para iniciar sesión.
+            <?php if (isset($_SESSION['usuario'])): ?>
+              Bienvenido, <?= htmlspecialchars($_SESSION['usuario']) ?>. Puede continuar con su compra.
+            <?php else: ?>
+              Por favor inicie sesión para realizar la compra
+              <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Haz clic aquí</a> para iniciar sesión o registrarte.
+            <?php endif; ?>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6 mb-5 mb-md-0">
-          <h2 class="h3 mb-3 text-black">Detalles de Facturación</h2>
-          <div class="p-3 p-lg-5 border bg-white">
-            <div class="form-group">
-              <label for="c_country" class="text-black">País <span class="text-danger">*</span></label>
-              <select id="c_country" class="form-control">
-                <option value="1">Selecciona un país</option>
-                <option value="2">Bangladesh</option>
-                <option value="3">Argelia</option>
-                <option value="4">Afganistán</option>
-                <option value="5">Ghana</option>
-                <option value="6">Albania</option>
-                <option value="7">Baréin</option>
-                <option value="8">Colombia</option>
-                <option value="9">República Dominicana</option>
-              </select>
-            </div>
-            <div class="form-group row">
-              <div class="col-md-6">
-                <label for="c_fname" class="text-black">Nombre <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_fname" name="c_fname">
-              </div>
-              <div class="col-md-6">
-                <label for="c_lname" class="text-black">Apellido <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_lname" name="c_lname">
-              </div>
-            </div>
+      <!-- Sección Dirección de Envío -->
+    <div class="row mb-5">
+      <div class="col-md-12">
+        <h2 class="h3 mb-3 text-black">Dirección de Envío</h2>
+        <div class="p-3 p-lg-5 border bg-white">
+<?php if (isset($_SESSION['usuario'])): ?>
+  <p><strong>Dirección de Entrega:</strong> <?= htmlspecialchars($usuario['direccion_entrega'] ?? 'No especificada') ?></p>
+  <p><strong>Código Postal:</strong> <?= htmlspecialchars($usuario['codigo_postal'] ?? 'No especificado') ?></p>
+  <p><strong>Dirección de Facturación:</strong> <?= htmlspecialchars($usuario['direccion_facturacion'] ?? 'No especificada') ?></p>
+  <p><strong>Teléfono:</strong> <?= htmlspecialchars($usuario['telefono'] ?? 'No especificado') ?></p>
+<?php else: ?>
+  <div class="alert alert-warning mb-0" role="alert">
+    Por favor <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">inicia sesión</a> para ver tu información de envío.
+  </div>
+<?php endif; ?>
 
-            <div class="form-group row">
-              <div class="col-md-12">
-                <label for="c_companyname" class="text-black">Empresa</label>
-                <input type="text" class="form-control" id="c_companyname" name="c_companyname">
-              </div>
-            </div>
-
-            <div class="form-group row">
-              <div class="col-md-12">
-                <label for="c_address" class="text-black">Dirección <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_address" name="c_address" placeholder="Dirección completa">
-              </div>
-            </div>
-
-            <div class="form-group mt-3">
-              <input type="text" class="form-control" placeholder="Apartamento, piso, unidad, etc. (opcional)">
-            </div>
-
-            <div class="form-group row">
-              <div class="col-md-6">
-                <label for="c_state_country" class="text-black">Estado / Provincia <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_state_country" name="c_state_country">
-              </div>
-              <div class="col-md-6">
-                <label for="c_postal_zip" class="text-black">Código Postal <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_postal_zip" name="c_postal_zip">
-              </div>
-            </div>
-
-            <div class="form-group row mb-5">
-              <div class="col-md-6">
-                <label for="c_email_address" class="text-black">Correo electrónico <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_email_address" name="c_email_address">
-              </div>
-              <div class="col-md-6">
-                <label for="c_phone" class="text-black">Teléfono <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_phone" name="c_phone" placeholder="Número de teléfono">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="c_create_account" class="text-black" data-bs-toggle="collapse" href="#create_an_account" role="button" aria-expanded="false" aria-controls="create_an_account"><input type="checkbox" value="1" id="c_create_account"> ¿Crear una cuenta?</label>
-              <div class="collapse" id="create_an_account">
-                <div class="py-2 mb-4">
-                  <p class="mb-3">Crea una cuenta ingresando la información a continuación. Si ya tienes cuenta, inicia sesión arriba.</p>
-                  <div class="form-group">
-                    <label for="c_account_password" class="text-black">Contraseña de la cuenta</label>
-                    <input type="email" class="form-control" id="c_account_password" name="c_account_password" placeholder="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="c_ship_different_address" class="text-black" data-bs-toggle="collapse" href="#ship_different_address" role="button" aria-expanded="false" aria-controls="ship_different_address"><input type="checkbox" value="1" id="c_ship_different_address"> ¿Enviar a una dirección diferente?</label>
-              <div class="collapse" id="ship_different_address">
-                <div class="py-2">
-                  <div class="form-group">
-                    <label for="c_diff_country" class="text-black">País <span class="text-danger">*</span></label>
-                    <select id="c_diff_country" class="form-control">
-                      <option value="1">Selecciona un país</option>
-                      <option value="2">Bangladesh</option>
-                      <option value="3">Argelia</option>
-                      <option value="4">Afganistán</option>
-                      <option value="5">Ghana</option>
-                      <option value="6">Albania</option>
-                      <option value="7">Baréin</option>
-                      <option value="8">Colombia</option>
-                      <option value="9">República Dominicana</option>
-                    </select>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-6">
-                      <label for="c_diff_fname" class="text-black">Nombre <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_fname" name="c_diff_fname">
-                    </div>
-                    <div class="col-md-6">
-                      <label for="c_diff_lname" class="text-black">Apellido <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_lname" name="c_diff_lname">
-                    </div>
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-12">
-                      <label for="c_diff_companyname" class="text-black">Empresa</label>
-                      <input type="text" class="form-control" id="c_diff_companyname" name="c_diff_companyname">
-                    </div>
-                  </div>
-
-                  <div class="form-group row mb-3">
-                    <div class="col-md-12">
-                      <label for="c_diff_address" class="text-black">Dirección <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_address" name="c_diff_address" placeholder="Dirección completa">
-                    </div>
-                  </div>
-
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Apartamento, piso, unidad, etc. (opcional)">
-                  </div>
-
-                  <div class="form-group row">
-                    <div class="col-md-6">
-                      <label for="c_diff_state_country" class="text-black">Estado / Provincia <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_state_country" name="c_diff_state_country">
-                    </div>
-                    <div class="col-md-6">
-                      <label for="c_diff_postal_zip" class="text-black">Código Postal <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_postal_zip" name="c_diff_postal_zip">
-                    </div>
-                  </div>
-
-                  <div class="form-group row mb-5">
-                    <div class="col-md-6">
-                      <label for="c_diff_email_address" class="text-black">Correo electrónico <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_email_address" name="c_diff_email_address">
-                    </div>
-                    <div class="col-md-6">
-                      <label for="c_diff_phone" class="text-black">Teléfono <span class="text-danger">*</span></label>
-                      <input type="text" class="form-control" id="c_diff_phone" name="c_diff_phone" placeholder="Número de teléfono">
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="c_order_notes" class="text-black">Notas del pedido</label>
-              <textarea name="c_order_notes" id="c_order_notes" cols="30" rows="5" class="form-control" placeholder="Escribe tus notas aquí..."></textarea>
-            </div>
-          </div>
         </div>
+      </div>
+    </div>
 
-        <div class="col-md-6">
+
+      <div class="row">
+        <div class="col-md-12">
           <div class="row mb-5">
             <div class="col-md-12">
               <h2 class="h3 mb-3 text-black">Código de Cupón</h2>
@@ -307,9 +188,8 @@ foreach ($carrito as $item) {
                 </div>
 
                 <div class="form-group">
-					<button type="submit" class="btn btn-black btn-lg py-3 btn-block">Realizar Pedido</button>
+					        <button type="button" class="btn btn-black btn-lg py-3 btn-block" onclick="validarCompra()">Realizar Pedido</button>
                 </div>
-
               </div>
             </div>
           </div>
@@ -327,5 +207,15 @@ foreach ($carrito as $item) {
   <script src="js/bootstrap.bundle.min.js"></script>
   <script src="js/tiny-slider.js"></script>
   <script src="js/custom.js"></script>
+
+  <script>
+function validarCompra() {
+  if (!usuarioLogueado) {
+    alert("Debes iniciar sesión para realizar la compra.");
+  } else {
+    window.location.href = "procesar_checkout.php";
+  }
+}
+</script>
 </body>
 </html>

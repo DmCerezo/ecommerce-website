@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2025 a las 23:36:28
+-- Tiempo de generación: 27-05-2025 a las 18:43:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -36,6 +36,15 @@ CREATE TABLE `carrito` (
   `total` decimal(10,2) NOT NULL,
   `fecha_venta` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `carrito`
+--
+
+INSERT INTO `carrito` (`id`, `usuario_id`, `producto_id`, `cantidad`, `precio_unitario`, `total`, `fecha_venta`) VALUES
+(32, 1, 3, 1, 135.00, 135.00, '2025-05-27 18:18:45'),
+(33, 1, 1, 2, 100.00, 200.00, '2025-05-27 18:28:59'),
+(34, 1, 2, 1, 110.00, 110.00, '2025-05-27 18:34:31');
 
 -- --------------------------------------------------------
 
@@ -79,17 +88,20 @@ CREATE TABLE `usuarios` (
   `nombre` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `fecha_registro` datetime DEFAULT current_timestamp()
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  `telefono` varchar(20) DEFAULT NULL,
+  `direccion_facturacion` text DEFAULT NULL,
+  `direccion_entrega` text DEFAULT NULL,
+  `codigo_postal` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password`, `fecha_registro`) VALUES
-(1, 'prueba', 'prueba@somnia.com', '1234', '2025-05-20 21:13:53'),
-(2, 'pepe', 'pepe@ugr.es', '1234', '2025-05-20 23:08:30'),
-(3, 'Juanan', 'juanan@ugr.es', '1234', '2025-05-20 23:34:20');
+INSERT INTO `usuarios` (`id`, `nombre`, `email`, `password`, `fecha_registro`, `telefono`, `direccion_facturacion`, `direccion_entrega`, `codigo_postal`) VALUES
+(1, 'prueba', 'prueba@somnia.com', '1234', '2025-05-20 21:13:53', NULL, NULL, NULL, NULL),
+(9, 'pepe', 'pepe@gmail.com', '1234', '2025-05-27 17:07:30', '65234324', 'Avenida Juaquina Eguaras 13 5A', 'Avenida Juaquina Eguaras 13 5A', '18013');
 
 --
 -- Índices para tablas volcadas
@@ -124,7 +136,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -136,7 +148,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas

@@ -51,6 +51,22 @@
             <label for="password" class="form-label">Contraseña</label>
             <input type="password" class="form-control" id="password" name="password" required>
           </div>
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telefono" name="telefono">
+          </div>
+          <div class="mb-3">
+            <label for="direccion_facturacion" class="form-label">Dirección de facturación</label>
+            <input type="text" class="form-control" id="direccion_facturacion" name="direccion_facturacion">
+          </div>
+          <div class="mb-3">
+            <label for="direccion_entrega" class="form-label">Dirección de entrega</label>
+            <input type="text" class="form-control" id="direccion_entrega" name="direccion_entrega">
+          </div>
+          <div class="mb-3">
+            <label for="codigo_postal" class="form-label">Código postal</label>
+            <input type="text" class="form-control" id="codigo_postal" name="codigo_postal">
+          </div>
           <div class="d-grid">
             <button type="submit" class="btn btn-primary">Registrarse</button>
           </div>
@@ -59,6 +75,7 @@
     </div>
   </div>
 </div>
+
 
 
 <?php if (isset($_SESSION['usuario'])): ?>
